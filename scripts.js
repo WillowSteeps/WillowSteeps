@@ -7,18 +7,19 @@
   // Your web app's Firebase configuration
   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
   const firebaseConfig = {
-    apiKey: "AIzaSyBWe9XlKMpUIQXc2AjLy1S8xMvjFYP8O7k",
-    authDomain: "willowsteeps-48ad9.firebaseapp.com",
-    projectId: "willowsteeps-48ad9",
-    storageBucket: "willowsteeps-48ad9.appspot.com",
-    messagingSenderId: "1514454861",
-    appId: "1:1514454861:web:32b6eabb7bcf4ee85ac104",
-    measurementId: "G-VDNN63ZWGM"
+    apiKey: "AIzaSyAMOc6n_-UxqouQ8YcPb21cZ7tA79ISRSM",
+    authDomain: "willowsteeps-fcca5.firebaseapp.com",
+    projectId: "willowsteeps-fcca5",
+    storageBucket: "willowsteeps-fcca5.appspot.com",
+    messagingSenderId: "814830989524",
+    appId: "1:814830989524:web:5b55c19b4155e58564cb41",
+    measurementId: "G-ZLP5BZGBLQ"
   };
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
+</scrip
 
 document.addEventListener('DOMContentLoaded', () => {
     const reviewForm = document.getElementById('review-form');
