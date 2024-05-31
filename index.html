@@ -9,7 +9,7 @@
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
-        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -30,6 +30,26 @@
         document.addEventListener('DOMContentLoaded', () => {
             const reviewForm = document.getElementById('review-form');
             const reviewsList = document.getElementById('reviews-list');
+            const randomTeaElement = document.getElementById('random-tea');
+
+            // Function to load a random tea
+            const loadRandomTea = async () => {
+                const teas = [];
+                const querySnapshot = await getDocs(collection(db, "reviews"));
+                querySnapshot.forEach((doc) => {
+                    const review = doc.data();
+                    if (!teas.includes(review.name)) {
+                        teas.push(review.name);
+                    }
+                });
+
+                if (teas.length > 0) {
+                    const randomIndex = new Date().getDate() % teas.length;
+                    randomTeaElement.innerHTML = `Today's tea recommendation: ${teas[randomIndex]}`;
+                } else {
+                    randomTeaElement.innerHTML = `No tea reviews available yet.`;
+                }
+            };
 
             // Load reviews from Firestore
             const loadReviews = async () => {
@@ -53,6 +73,7 @@
                 try {
                     await addDoc(collection(db, "reviews"), review);
                     loadReviews();
+                    loadRandomTea();
                 } catch (e) {
                     console.error("Error adding document: ", e);
                 }
@@ -78,6 +99,15 @@
 
             // Initial load
             loadReviews();
+            loadRandomTea();
+
+            // Reload random tea at midnight
+            const now = new Date();
+            const millisTillMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0) - now;
+            setTimeout(function () {
+                loadRandomTea();
+                setInterval(loadRandomTea, 24 * 60 * 60 * 1000);
+            }, millisTillMidnight);
         });
     </script>
 </head>
@@ -93,14 +123,13 @@
             <div class="container">
                 <h2>Welcome to WillowSteeps</h2>
                 <p>We provide tea recommendations and rate teas out of 10. Join our community of tea enthusiasts!</p>
+                <div id="random-tea" class="random-tea">
+                    <!-- Random tea recommendation will be displayed here -->
+                </div>
             </div>
         </section>
-        <section class="reviews">
+        <section class="review-form-section">
             <div class="container">
-                <h2>Latest Tea Reviews</h2>
-                <div id="reviews-list">
-                    <!-- User reviews will be appended here -->
-                </div>
                 <div class="review-form">
                     <h3>Leave a Review</h3>
                     <form id="review-form">
@@ -109,6 +138,14 @@
                         <textarea id="tea-review" placeholder="Write your review here..." required></textarea>
                         <button type="submit">Submit Review</button>
                     </form>
+                </div>
+            </div>
+        </section>
+        <section class="reviews">
+            <div class="container">
+                <h2>Latest Tea Reviews</h2>
+                <div id="reviews-list">
+                    <!-- User reviews will be appended here -->
                 </div>
             </div>
         </section>
