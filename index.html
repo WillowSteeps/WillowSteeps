@@ -9,7 +9,7 @@
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -31,6 +31,10 @@
             const reviewForm = document.getElementById('review-form');
             const reviewsList = document.getElementById('reviews-list');
             const randomTeaElement = document.getElementById('random-tea');
+            const homePage = document.getElementById('home-page');
+            const reviewsPage = document.getElementById('reviews-page');
+            const navHome = document.getElementById('nav-home');
+            const navReviews = document.getElementById('nav-reviews');
 
             // Function to load a random tea
             const loadRandomTea = async () => {
@@ -97,9 +101,24 @@
                 }
             });
 
+            // Navigation functions
+            const showHomePage = () => {
+                homePage.style.display = 'block';
+                reviewsPage.style.display = 'none';
+            };
+
+            const showReviewsPage = () => {
+                homePage.style.display = 'none';
+                reviewsPage.style.display = 'block';
+                loadReviews(); // Load reviews when navigating to the reviews page
+            };
+
+            navHome.addEventListener('click', showHomePage);
+            navReviews.addEventListener('click', showReviewsPage);
+
             // Initial load
-            loadReviews();
             loadRandomTea();
+            showHomePage(); // Show home page by default
 
             // Reload random tea at midnight
             const now = new Date();
@@ -116,39 +135,47 @@
         <div class="container">
             <h1>WillowSteeps</h1>
             <p>Discover and rate the finest teas with WillowSteeps</p>
+            <nav>
+                <button id="nav-home">Home</button>
+                <button id="nav-reviews">Reviews</button>
+            </nav>
         </div>
     </header>
     <main>
-        <section class="intro">
-            <div class="container">
-                <h2>Welcome to WillowSteeps</h2>
-                <p>We provide tea recommendations and rate teas out of 10. Join our community of tea enthusiasts!</p>
-                <div id="random-tea" class="random-tea">
-                    <!-- Random tea recommendation will be displayed here -->
+        <div id="home-page">
+            <section class="intro">
+                <div class="container">
+                    <h2>Welcome to WillowSteeps</h2>
+                    <p>We provide tea recommendations and rate teas out of 10. Join our community of tea enthusiasts!</p>
+                    <div id="random-tea" class="random-tea">
+                        <!-- Random tea recommendation will be displayed here -->
+                    </div>
                 </div>
-            </div>
-        </section>
-        <section class="review-form-section">
-            <div class="container">
-                <div class="review-form">
-                    <h3>Leave a Review</h3>
-                    <form id="review-form">
-                        <input type="text" id="tea-name" placeholder="Tea Name" required>
-                        <input type="number" id="tea-rating" placeholder="Rating (out of 10)" min="1" max="10" required>
-                        <textarea id="tea-review" placeholder="Write your review here..." required></textarea>
-                        <button type="submit">Submit Review</button>
-                    </form>
+            </section>
+            <section class="review-form-section">
+                <div class="container">
+                    <div class="review-form">
+                        <h3>Leave a Review</h3>
+                        <form id="review-form">
+                            <input type="text" id="tea-name" placeholder="Tea Name" required>
+                            <input type="number" id="tea-rating" placeholder="Rating (out of 10)" min="1" max="10" required>
+                            <textarea id="tea-review" placeholder="Write your review here..." required></textarea>
+                            <button type="submit">Submit Review</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        </section>
-        <section class="reviews">
-            <div class="container">
-                <h2>Latest Tea Reviews</h2>
-                <div id="reviews-list">
-                    <!-- User reviews will be appended here -->
+            </section>
+        </div>
+        <div id="reviews-page" style="display:none;">
+            <section class="reviews">
+                <div class="container">
+                    <h2>Latest Tea Reviews</h2>
+                    <div id="reviews-list">
+                        <!-- User reviews will be appended here -->
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
     </main>
     <footer>
         <div class="container">
