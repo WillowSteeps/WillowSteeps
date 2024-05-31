@@ -1,20 +1,16 @@
-// Import Firebase scripts and Firestore
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js';
-import { getFirestore, collection, addDoc, getDocs } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js';
-
-// Your Firebase configuration
+// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyAMOc6n_-UxqouQ8YcPb21cZ7tA79ISRSM",
-    authDomain: "willowsteeps-fcca5.firebaseapp.com",
-    projectId: "willowsteeps-fcca5",
-    storageBucket: "willowsteeps-fcca5.appspot.com",
-    messagingSenderId: "Y814830989524",
-    appId: "1:814830989524:web:5b55c19b4155e58564cb41"
+  authDomain: "willowsteeps-fcca5.firebaseapp.com",
+  projectId: "willowsteeps-fcca5",
+  storageBucket: "willowsteeps-fcca5.appspot.com",
+  messagingSenderId: "814830989524",
+  appId: "1:814830989524:web:5b55c19b4155e58564cb41"
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
 document.addEventListener('DOMContentLoaded', () => {
     const reviewForm = document.getElementById('review-form');
@@ -22,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load reviews from Firestore
     const loadReviews = async () => {
-        const querySnapshot = await getDocs(collection(db, "reviews"));
+        const querySnapshot = await db.collection('reviews').get();
         reviewsList.innerHTML = '';
         querySnapshot.forEach((doc) => {
             const review = doc.data();
@@ -40,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Save review to Firestore
     const saveReview = async (review) => {
         try {
-            await addDoc(collection(db, "reviews"), review);
+            await db.collection('reviews').add(review);
             loadReviews();
         } catch (e) {
             console.error("Error adding document: ", e);
@@ -57,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (name && rating && review) {
             const newReview = {
                 name,
-                rating,
+                rating: parseInt(rating),
                 review
             };
             saveReview(newReview);
