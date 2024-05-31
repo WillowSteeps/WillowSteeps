@@ -8,9 +8,8 @@ const firebaseConfig = {
     authDomain: "willowsteeps-fcca5.firebaseapp.com",
     projectId: "willowsteeps-fcca5",
     storageBucket: "willowsteeps-fcca5.appspot.com",
-    messagingSenderId: "814830989524",
-    appId: "1:814830989524:web:5b55c19b4155e58564cb41",
-    measurementId: "G-ZLP5BZGBLQ""
+    messagingSenderId: "Y814830989524",
+    appId: "1:814830989524:web:5b55c19b4155e58564cb41"
 };
 
 // Initialize Firebase
