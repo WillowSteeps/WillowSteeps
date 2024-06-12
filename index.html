@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WillowSteeps</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script type="module">
-        // Import the functions you need from the SDKs you need
+        // Firebase configuration and initialization
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
         import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAMOc6n_-UxqouQ8YcPb21cZ7tA79ISRSM",
             authDomain: "willowsteeps-fcca5.firebaseapp.com",
@@ -22,7 +22,6 @@
             measurementId: "G-ZLP5BZGBLQ"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const db = getFirestore(app);
@@ -36,7 +35,6 @@
             const navHome = document.getElementById('nav-home');
             const navReviews = document.getElementById('nav-reviews');
 
-            // Function to load a random tea
             const loadRandomTea = async () => {
                 const teas = [];
                 const querySnapshot = await getDocs(collection(db, "reviews"));
@@ -55,24 +53,24 @@
                 }
             };
 
-            // Load reviews from Firestore
             const loadReviews = async () => {
                 const querySnapshot = await getDocs(collection(db, "reviews"));
                 reviewsList.innerHTML = '';
                 querySnapshot.forEach((doc) => {
                     const review = doc.data();
                     const reviewElement = document.createElement('div');
-                    reviewElement.className = 'review';
+                    reviewElement.className = 'review card mb-3';
                     reviewElement.innerHTML = `
-                        <h3>${review.name}</h3>
-                        <p>Rating: ${review.rating}/10</p>
-                        <p>${review.review}</p>
+                        <div class="card-body">
+                            <h5 class="card-title">${review.name}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Rating: ${review.rating}/10</h6>
+                            <p class="card-text">${review.review}</p>
+                        </div>
                     `;
                     reviewsList.appendChild(reviewElement);
                 });
             };
 
-            // Save review to Firestore
             const saveReview = async (review) => {
                 try {
                     await addDoc(collection(db, "reviews"), review);
@@ -83,7 +81,6 @@
                 }
             };
 
-            // Handle form submission
             reviewForm.addEventListener('submit', (event) => {
                 event.preventDefault();
                 const name = document.getElementById('tea-name').value;
@@ -101,7 +98,6 @@
                 }
             });
 
-            // Navigation functions
             const showHomePage = () => {
                 homePage.style.display = 'block';
                 reviewsPage.style.display = 'none';
@@ -110,17 +106,15 @@
             const showReviewsPage = () => {
                 homePage.style.display = 'none';
                 reviewsPage.style.display = 'block';
-                loadReviews(); // Load reviews when navigating to the reviews page
+                loadReviews();
             };
 
             navHome.addEventListener('click', showHomePage);
             navReviews.addEventListener('click', showReviewsPage);
 
-            // Initial load
             loadRandomTea();
-            showHomePage(); // Show home page by default
+            showHomePage();
 
-            // Reload random tea at midnight
             const now = new Date();
             const millisTillMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0) - now;
             setTimeout(function () {
@@ -131,36 +125,42 @@
     </script>
 </head>
 <body>
-    <header>
+    <header class="bg-dark text-white py-3">
         <div class="container">
             <h1>WillowSteeps</h1>
             <p>Discover and rate the finest teas with WillowSteeps</p>
-            <nav>
-                <button id="nav-home">Home</button>
-                <button id="nav-reviews">Reviews</button>
+            <nav class="nav">
+                <button id="nav-home" class="btn btn-light mr-2">Home</button>
+                <button id="nav-reviews" class="btn btn-light">Reviews</button>
             </nav>
         </div>
     </header>
-    <main>
+    <main class="container mt-4">
         <div id="home-page">
             <section class="intro">
                 <div class="container">
                     <h2>Welcome to WillowSteeps</h2>
                     <p>We provide tea recommendations and rate teas out of 10. Join our community of tea enthusiasts!</p>
-                    <div id="random-tea" class="random-tea">
+                    <div id="random-tea" class="random-tea alert alert-info">
                         <!-- Random tea recommendation will be displayed here -->
                     </div>
                 </div>
             </section>
-            <section class="review-form-section">
+            <section class="review-form-section mt-4">
                 <div class="container">
-                    <div class="review-form">
+                    <div class="review-form card p-4">
                         <h3>Leave a Review</h3>
                         <form id="review-form">
-                            <input type="text" id="tea-name" placeholder="Tea Name" required>
-                            <input type="number" id="tea-rating" placeholder="Rating (out of 10)" min="1" max="10" required>
-                            <textarea id="tea-review" placeholder="Write your review here..." required></textarea>
-                            <button type="submit">Submit Review</button>
+                            <div class="form-group">
+                                <input type="text" id="tea-name" class="form-control" placeholder="Tea Name" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="tea-rating" class="form-control" placeholder="Rating (out of 10)" min="1" max="10" required>
+                            </div>
+                            <div class="form-group">
+                                <textarea id="tea-review" class="form-control" placeholder="Write your review here..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit Review</button>
                         </form>
                     </div>
                 </div>
@@ -170,15 +170,15 @@
             <section class="reviews">
                 <div class="container">
                     <h2>Latest Tea Reviews</h2>
-                    <div id="reviews-list">
+                    <div id="reviews-list" class="mt-4">
                         <!-- User reviews will be appended here -->
                     </div>
                 </div>
             </section>
         </div>
     </main>
-    <footer>
-        <div class="container">
+    <footer class="bg-dark text-white py-3 mt-4">
+        <div class="container text-center">
             <p>&copy; 2024 WillowSteeps. All rights reserved.</p>
         </div>
     </footer>
